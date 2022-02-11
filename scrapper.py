@@ -58,18 +58,19 @@ def match_template(job_description, job_title):
     return winning_template
 
 
-def process_api_data(all_jobs):
-    all_jobs_data = []
-    for job in all_jobs:
-        all_jobs_data.append(
-            {
-                "job_id": job["id"],
-                "job_url": f"{FREELANCE_BASE_URL}/projects/{job['id']}",
-                "job_title": job["title"],
-                "job_description": job["description"],
-            }
-        )
-    return all_jobs_data
+# # for using a payload approach incase we want just the api
+# def process_api_data(all_jobs):
+#     all_jobs_data = []
+#     for job in all_jobs:
+#         all_jobs_data.append(
+#             {
+#                 "job_id": job["id"],
+#                 "job_url": f"{FREELANCE_BASE_URL}/projects/{job['id']}",
+#                 "job_title": job["title"],
+#                 "job_description": job["description"],
+#             }
+#         )
+#     return all_jobs_data
 
 
 def time_to_bid(all_jobs):
@@ -82,47 +83,35 @@ def time_to_bid(all_jobs):
         send_proposals(template, job_url)
 
 
-# def jobs_scoring(all_jobs, payload):
-#     listofjobs = []
-
-#     all_jobs_data = process_api_data(all_jobs)
-
-#     for job in all_jobs_data:
-
-#         # if payload["ml"]["is_ml"]:
-#         #     mltemp1score = match_template(payload["ml"]["ml_keywords"], job["job_description"], job["job_title"])
-#         # if payload["wb"]["is_wb"]:
-#         #     webtemp1score = match_template(payload["wb"]["wb_keywords"], job["job_description"], job["job_title"])
-#         # if payload["mb"]["is_mb"]:
-#         #     mobtemp1score = match_template(payload["mb"]["mb_keywords"], job["job_description"], job["job_title"])
-#         # if payload["wp"]["is_wp"]:
-#         #     wordpresstemp1score = match_template(
-#         #         payload["wp"]["wp_keywords"], job["job_description"], job["job_title"]
-#             )
-#         # scoredict = {
-#         #     wordpresstemp1score: "wordpresstemp1",
-#         #     webtemp1score: "webtemp1",
-#         #     mltemp1score: "mltemp1",
-#         #     mobtemp1score: "mobtemp1",
-#         # }
-#         maxscore = scoredict.get(max(scoredict))
-#         maxvalue = max(scoredict)
-#         if job["job_id"] not in listofjobs:
-#             listofjobs.append(job["job_id"])
-#             if maxvalue != 0:
-#                 filename = maxscore + ".txt"
-#                 print(maxvalue)
-#                 print(job["job_title"])
-#                 # print(job_description)
-#                 print(filename)
-#                 templatefile = open(filename, "r")
-#                 templateitself = templatefile.readlines()
-#                 send_proposals(templateitself, job["job_url"])
-#                 time.sleep(30)
-#             else:
-#                 print("all scores are null")
-
-
-# def main(payload):
-#     all_jobs = get_all_jobs(FREELANCE_BASE_URL, headers, params)
-#     jobs_scoring(all_jobs, payload)
+def make_params(job_skill_list):
+    params = (
+        ("limit", "100"),
+        ("full_description", "true"),
+        ("job_details", "true"),
+        ("local_details", "true"),
+        ("location_details", "true"),
+        ("upgrade_details", "true"),
+        ("user_country_details", "true"),
+        ("user_details", "true"),
+        ("user_employer_reputation", "true"),
+        ("countries[]", ["au", "ca", "cn", "is", "jp", "my", "mu", "mc", "nz", "no", "za", "ch", "gb", "us", "vn"]),
+        (
+            "jobs[]",
+            job_skill_list,
+        ),
+        ("languages[]", "en"),
+        ("project_types[]", ["fixed", "hourly"]),
+        ("project_upgrades[]", ["featured", "sealed", "NDA", "urgent", "fulltime", "assisted"]),
+        ("reverse_sort", "true"),
+        (
+            "sort_field",
+            "bid_count",
+        ),
+        ("min_avg_hourly_rate", "10"),
+        ("min_avg_price", "50"),
+        ("webapp", "1"),
+        ("compact", "true"),
+        ("new_errors", "true"),
+        ("new_pools", "true"),
+    )
+    return params
