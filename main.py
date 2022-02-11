@@ -24,17 +24,11 @@ from starlette.responses import RedirectResponse
 
 import models
 from database import SessionLocal, engine
-from initialize import (
-    ml_keywords,
-    mob_keywords,
-    nlp_keywords,
-    web_keywords,
-    wordpress_keywords,
-)
+from initialize import headers
 from initialize_driver import *
 from loginfunc import *
 from models import templatesinfo
-from scrapper import main
+from scrapper import *
 
 # from ssl import _PasswordType
 
@@ -137,7 +131,8 @@ async def settings_page(
         jobidlist.append("759")
     if reactnative:
         jobidlist.append("1314")
-    print(jobidlist)
+    paramz = make_params(jobidlist)
+    all_jobs = get_all_jobs(FREELANCE_BASE_URL, headers, paramz)
     return templates.TemplateResponse("scrapper_parameters.html", {"request": request})
 
 
