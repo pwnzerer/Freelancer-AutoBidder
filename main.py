@@ -133,6 +133,7 @@ async def settings_page(
         jobidlist.append("1314")
     paramz = make_params(jobidlist)
     all_jobs = get_all_jobs(FREELANCE_BASE_URL, headers, paramz)
+    time_to_bid(all_jobs)
     return templates.TemplateResponse("scrapper_parameters.html", {"request": request})
 
 
