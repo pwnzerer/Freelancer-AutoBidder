@@ -49,12 +49,14 @@ def match_template(job_description, job_title):
     for rows in alldatafromdb:
         keyword_score = 0
         keywords = rows.keywords.split(",")
+        print(keywords)
         for keyword in keywords:
             if (keyword.lower() in description_list) or (keyword.lower() in job_title_list):
                 keyword_score += 1
             if keyword_score > maxscore:
                 maxscore = keyword_score
                 winning_template = rows.template_words
+    print(winning_template)
     return winning_template
 
 
