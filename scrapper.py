@@ -53,9 +53,9 @@ def match_template(job_description, job_title):
         for keyword in keywords:
             if (keyword.lower() in description_list) or (keyword.lower() in job_title_list):
                 keyword_score += 1
-            if keyword_score > maxscore:
-                maxscore = keyword_score
-                winning_template = rows.template_words
+        if keyword_score > maxscore:
+            maxscore = keyword_score
+            winning_template = rows.template_words
     print(winning_template)
     return winning_template
 
@@ -82,7 +82,10 @@ def time_to_bid(all_jobs):
         job_description = job["description"]
         job_url = f"https://www.freelancer.com/projects/{job_id}"
         template = match_template(job_description, job_title)
-        send_proposals(template, job_url)
+        if template == "":
+            print("no match")
+        else:
+            send_proposals(template, job_url)
 
 
 def make_params(job_skill_list):
