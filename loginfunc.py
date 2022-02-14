@@ -37,7 +37,7 @@ def login(chrome_driver, email, password):
         chrome_driver.find_element_by_css_selector(
             "body > app-root > app-logged-out-shell > app-login-page > fl-container > fl-bit > app-login > app-credentials-form > form > app-login-signup-button > fl-button > button"
         ).click()
-        time.sleep(4)
+        time.sleep(50)
     except Exception as e:
         print(e)
         print("already logged in")

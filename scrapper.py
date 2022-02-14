@@ -27,7 +27,7 @@ def send_proposals(template, thejoburl):
         proposal_text_area = driver.find_element_by_xpath("//textarea[@id='descriptionTextArea']")
         proposal_text_area.send_keys(template)
         driver.find_element_by_xpath("//button[contains(text(), 'Place Bid')]").click()
-        time.sleep(50)
+        time.sleep(300)
     except:
         return
 
@@ -76,16 +76,19 @@ def match_template(job_description, job_title):
 
 
 def time_to_bid(all_jobs):
+    total_jobs = 0
     for job in all_jobs:
         job_id = job["id"]
         job_title = job["title"]
         job_description = job["description"]
         job_url = f"https://www.freelancer.com/projects/{job_id}"
         template = match_template(job_description, job_title)
+        total_jobs += 1
         if template == "":
             print("no match")
         else:
             send_proposals(template, job_url)
+    print(total_jobs)
 
 
 def make_params(job_skill_list):

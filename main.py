@@ -95,6 +95,7 @@ async def settings_page(
     angular: bool = Form(False),
     reactjs: bool = Form(False),
     reactnative: bool = Form(False),
+    wordpress: bool = Form(False),
 ):
     jobidlist = []
     if python:
@@ -131,6 +132,8 @@ async def settings_page(
         jobidlist.append("759")
     if reactnative:
         jobidlist.append("1314")
+    if reactnative:
+        jobidlist.append("69")
     paramz = make_params(jobidlist)
     all_jobs = get_all_jobs(FREELANCE_BASE_URL, headers, paramz)
     time_to_bid(all_jobs)
