@@ -22,3 +22,9 @@ class templatesinfo(Base):
     # email = Column(String, unique=True, index=True)
     # hashed_password = Column(String)
     # is_active = Column(Boolean, default=True)
+
+
+class negative_keywords(Base):
+    __tablename__ = "negative_keywords"
+    id = Column(Integer, primary_key=True, index=True)
+    negkeywords = Column(String, unique=True, index=True)

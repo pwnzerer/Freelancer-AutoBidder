@@ -18,16 +18,16 @@ from models import templatesinfo
 FREELANCE_BASE_URL = config("FREELANCE_BASE_URL", cast=str)
 
 
-def send_proposals(template, thejoburl):
+def send_proposals(template, thejoburl, time):
     driver = initialize_driver()
     driver.get(thejoburl)
     print(thejoburl)
-    time.sleep(100)
+    time.sleep(50)
     try:
         proposal_text_area = driver.find_element_by_xpath("//textarea[@id='descriptionTextArea']")
         proposal_text_area.send_keys(template)
         driver.find_element_by_xpath("//button[contains(text(), 'Place Bid')]").click()
-        time.sleep(300)
+        time.sleep(time)
     except:
         return
 
@@ -75,7 +75,7 @@ def match_template(job_description, job_title):
 #     return all_jobs_data
 
 
-def time_to_bid(all_jobs):
+def time_to_bid(all_jobs, time):
     total_jobs = 0
     for job in all_jobs:
         job_id = job["id"]
@@ -87,13 +87,13 @@ def time_to_bid(all_jobs):
         if template == "":
             print("no match")
         else:
-            send_proposals(template, job_url)
+            send_proposals(template, job_url, time)
     print(total_jobs)
 
 
 def make_params(job_skill_list):
     params = (
-        ("limit", "100"),
+        ("limit", "200"),
         ("full_description", "true"),
         ("job_details", "true"),
         ("local_details", "true"),
