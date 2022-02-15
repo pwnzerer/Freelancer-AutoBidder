@@ -28,3 +28,6 @@ class negative_keywords(Base):
     __tablename__ = "negative_keywords"
     id = Column(Integer, primary_key=True, index=True)
     negkeywords = Column(String, unique=True, index=True)
+
+    def __init__(self, negkeywords):
+        self.negkeywords = negkeywords

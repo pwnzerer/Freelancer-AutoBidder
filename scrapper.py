@@ -12,13 +12,13 @@ from database import SessionLocal, engine
 from initialize import headers, params
 from initialize_driver import *
 from loginfunc import loaded_browser
-from models import templatesinfo
+from models import negative_keywords, templatesinfo
 
 # config variables here
 FREELANCE_BASE_URL = config("FREELANCE_BASE_URL", cast=str)
 
 
-def send_proposals(template, thejoburl, time):
+def send_proposals(template, thejoburl, timer):
     driver = initialize_driver()
     driver.get(thejoburl)
     print(thejoburl)
@@ -44,20 +44,27 @@ def match_template(job_description, job_title):
     winning_template = ""
     db = SessionLocal()
     alldatafromdb = db.query(templatesinfo).all()
+    all_negative_keywords = db.query(negative_keywords).all()
     description_list = job_description.lower().split(" ")
     job_title_list = job_title.lower().split(" ")
-    for rows in alldatafromdb:
-        keyword_score = 0
-        keywords = rows.keywords.split(",")
-        print(keywords)
-        for keyword in keywords:
-            if (keyword.lower() in description_list) or (keyword.lower() in job_title_list):
-                keyword_score += 1
-        if keyword_score > maxscore:
-            maxscore = keyword_score
-            winning_template = rows.template_words
-    print(winning_template)
-    return winning_template
+    for celldata in all_negative_keywords:
+        negativekey = celldata.negkeywords
+        if (negativekey.lower() in description_list) or (negativekey.lower() in job_title_list):
+            print("negative keywords detected")
+            return winning_template
+        else:
+            for rows in alldatafromdb:
+                keyword_score = 0
+                keywords = rows.keywords.split(",")
+                print(keywords)
+                for keyword in keywords:
+                    if (keyword.lower() in description_list) or (keyword.lower() in job_title_list):
+                        keyword_score += 1
+                if keyword_score > maxscore:
+                    maxscore = keyword_score
+                    winning_template = rows.template_words
+            print(winning_template)
+            return winning_template
 
 
 # # for using a payload approach incase we want just the api
@@ -75,7 +82,7 @@ def match_template(job_description, job_title):
 #     return all_jobs_data
 
 
-def time_to_bid(all_jobs, time):
+def time_to_bid(all_jobs, timer):
     total_jobs = 0
     for job in all_jobs:
         job_id = job["id"]
@@ -87,7 +94,7 @@ def time_to_bid(all_jobs, time):
         if template == "":
             print("no match")
         else:
-            send_proposals(template, job_url, time)
+            send_proposals(template, job_url, timer)
     print(total_jobs)
 
 

@@ -27,7 +27,7 @@ from database import SessionLocal, engine
 from initialize import headers
 from initialize_driver import *
 from loginfunc import *
-from models import templatesinfo
+from models import negative_keywords, templatesinfo
 from scrapper import *
 
 # from ssl import _PasswordType
@@ -164,6 +164,21 @@ async def addtemplates(
     db.add(template_data)
     db.commit()
     return templates.TemplateResponse("maketemplate.html", {"request": request, "alltempdata": alltempdata})
+
+
+@app.get("/negativekeywords", response_class=HTMLResponse)
+async def negativeee_keywords(request: Request, db: Session = Depends(get_db)):
+    allkeydata = db.query(negative_keywords).all()
+    return templates.TemplateResponse("add_negative_keywords.html", {"request": request, "allkeydata": allkeydata})
+
+
+@app.post("/negativekeywords")
+async def negativekeywords(request: Request, neg_key: str = Form(...), db: Session = Depends(get_db)):
+    allkeydata = db.query(negative_keywords).all()
+    keyworddata = negative_keywords(neg_key)
+    db.add(keyworddata)
+    db.commit()
+    return templates.TemplateResponse("add_negative_keywords.html", {"request": request, "allkeydata": allkeydata})
 
 
 # @app.get("/")
