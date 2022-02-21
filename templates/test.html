@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <title>Document</title>
+</head>
+<script>
+    function getcheckval(){
+    var bruh123 = document.getElementsByClassName('temp_check');
+    var bruhArray = Array.from(bruh123);
+    var value = bruhArray[0].checked
+    var id = bruhArray[0].id
+    $.post( "/testing", { id: id, value:value });}
+</script>
+<body class="container">
+    <h1>i am testing something</h1>
+    <div>
+        <div class="row">
+          <br>
+          <div class="col">
+            <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Template Name</th>
+                    <th scope="col">Template Text</th>
+                    <th scope="col">Keywords</th>
+                    <th scope="col">buttons</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    {% for tempdata in alltestingdata %}
+                  <tr class="table">
+                    <th scope="row">{{ tempdata.id }}</th>
+                    <td>{{ tempdata.template_name }}</td>
+                    <td>{{ tempdata.template_words }}</td>
+                    <td>{{ tempdata.keywords }}</td>
+                    <td><input type="checkbox" value="True" id= {{ tempdata.id }} name= {{ tempdata.id }} class="temp_check" checked></td>
+                  </tr>
+                  {% endfor %}
+                  <button type="button" class="btn btn-primary" onclick="getcheckval()">Primary</button>
+
+          </div>
+
+</body>
+</html>

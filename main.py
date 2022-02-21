@@ -9,7 +9,6 @@ from pickle import LIST
 from typing import List, Optional
 from urllib import request, response
 
-import requests
 import starlette.status as status
 import uvicorn
 from decouple import config
@@ -179,6 +178,26 @@ async def negativekeywords(request: Request, neg_key: str = Form(...), db: Sessi
     db.add(keyworddata)
     db.commit()
     return templates.TemplateResponse("add_negative_keywords.html", {"request": request, "allkeydata": allkeydata})
+
+
+@app.get("/testing", response_class=HTMLResponse)
+async def testtest(request: Request, db: Session = Depends(get_db)):
+    alltestingdata = db.query(templatesinfo).all()
+    return templates.TemplateResponse("test.html", {"request": request, "alltestingdata": alltestingdata})
+
+
+class Item(BaseModel):
+    id: str
+    value: bool
+
+
+@app.post("/testing")
+async def testtest1(item: Item, db: Session = Depends(get_db)):
+    # jsdata = request.form.get['']
+    print(item)
+    alltestingdata = db.query(templatesinfo).all()
+    # print(json.loads(jsdata))
+    return templates.TemplateResponse("test.html", {"request": request, "alltestingdata": alltestingdata})
 
 
 # @app.get("/")
