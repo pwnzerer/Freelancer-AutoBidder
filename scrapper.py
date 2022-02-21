@@ -39,7 +39,7 @@ def get_all_jobs(FREELANCE_BASE_URL, headers, params):
     return all_jobs
 
 
-def match_template(job_description, job_title):
+def match_template(job_description, job_title, list_of_template_ids):
     maxscore = 0
     winning_template = ""
     db = SessionLocal()
@@ -54,15 +54,16 @@ def match_template(job_description, job_title):
             return winning_template
         else:
             for rows in alldatafromdb:
-                keyword_score = 0
-                keywords = rows.keywords.split(",")
-                print(keywords)
-                for keyword in keywords:
-                    if (keyword.lower() in description_list) or (keyword.lower() in job_title_list):
-                        keyword_score += 1
-                if keyword_score > maxscore:
-                    maxscore = keyword_score
-                    winning_template = rows.template_words
+                if rows.id in list_of_template_ids:
+                    keyword_score = 0
+                    keywords = rows.keywords.split(",")
+                    print(keywords)
+                    for keyword in keywords:
+                        if (keyword.lower() in description_list) or (keyword.lower() in job_title_list):
+                            keyword_score += 1
+                    if keyword_score > maxscore:
+                        maxscore = keyword_score
+                        winning_template = rows.template_words
             print(winning_template)
             return winning_template
 
@@ -82,14 +83,14 @@ def match_template(job_description, job_title):
 #     return all_jobs_data
 
 
-def time_to_bid(all_jobs, timer):
+def time_to_bid(all_jobs, timer, list_of_template_ids):
     total_jobs = 0
     for job in all_jobs:
         job_id = job["id"]
         job_title = job["title"]
         job_description = job["description"]
         job_url = f"https://www.freelancer.com/projects/{job_id}"
-        template = match_template(job_description, job_title)
+        template = match_template(job_description, job_title, list_of_template_ids)
         total_jobs += 1
         if template == "":
             print("no match")

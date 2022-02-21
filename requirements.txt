@@ -1,0 +1,7 @@
+fastapi
+pydantic
+sqlalchemy
+selenium
+python-decouple
+python-multipart
+jinja2

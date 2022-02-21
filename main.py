@@ -70,12 +70,14 @@ async def login_caller(request: Request, user: str = Form(...), password: str = 
 
 
 @app.get("/settings", response_class=HTMLResponse)
-async def settingspage(request: Request):
-    return templates.TemplateResponse("scrapper_parameters.html", {"request": request})
+async def settingspage(request: Request, db: Session = Depends(get_db)):
+    alltempdata = db.query(templatesinfo).all()
+    return templates.TemplateResponse("scrapper_parameters.html", {"request": request, "alltempdata": alltempdata})
 
 
-@app.post("/settings")
+@app.post("/settings/{data}")
 async def settings_page(
+    data,
     request: Request,
     python: bool = Form(False),
     html: bool = Form(False),
@@ -134,6 +136,8 @@ async def settings_page(
         jobidlist.append("1314")
     if wordpress:
         jobidlist.append("69")
+    responce = json.loads(data)
+    list_of_template_ids = responce["favorite"]
     paramz = make_params(jobidlist)
     all_jobs = get_all_jobs(FREELANCE_BASE_URL, headers, paramz)
     time_to_bid(all_jobs, timeforbid)
@@ -189,8 +193,8 @@ async def testtest(request: Request, db: Session = Depends(get_db)):
 @app.post("/testing/{data}")
 async def testtest1(data, request: Request, db: Session = Depends(get_db)):
     responce = json.loads(data)
-    params = responce["favorite"]
-    print("our data is", type(params))
+    listofids = responce["favorite"]
+    print("our data is", params)
     alltestingdata = db.query(templatesinfo).all()
     # print(json.loads(jsdata))
     return templates.TemplateResponse("test.html", {"request": request, "alltestingdata": alltestingdata})
