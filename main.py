@@ -186,15 +186,11 @@ async def testtest(request: Request, db: Session = Depends(get_db)):
     return templates.TemplateResponse("test.html", {"request": request, "alltestingdata": alltestingdata})
 
 
-class Item(BaseModel):
-    id: str
-    value: bool
-
-
-@app.post("/testing")
-async def testtest1(item: Item, db: Session = Depends(get_db)):
-    # jsdata = request.form.get['']
-    print(item)
+@app.post("/testing/{data}")
+async def testtest1(data, request: Request, db: Session = Depends(get_db)):
+    responce = json.loads(data)
+    params = responce["favorite"]
+    print("our data is", type(params))
     alltestingdata = db.query(templatesinfo).all()
     # print(json.loads(jsdata))
     return templates.TemplateResponse("test.html", {"request": request, "alltestingdata": alltestingdata})

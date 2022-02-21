@@ -9,12 +9,25 @@
     <title>Document</title>
 </head>
 <script>
-    function getcheckval(){
-    var bruh123 = document.getElementsByClassName('temp_check');
-    var bruhArray = Array.from(bruh123);
-    var value = bruhArray[0].checked
-    var id = bruhArray[0].id
-    $.post( "/testing", { id: id, value:value });}
+    // function getcheckval(){var val = document.querySelector('.temp_check'); console.log(val)}
+    $(document).ready(function() {
+        $("button").click(function(){
+            var favorite = [];
+            $.each($("input[class='temp_check']:checked"), function(){
+                favorite.push($(this).val());
+            });
+            const data= JSON.stringify({favorite: favorite});
+            $.ajax({
+                url: "/testing/" + data,
+                type: "post", //Change this to post or put
+                dataType: "json",
+                contentType: "application/json",
+                success: function(data) {
+                  console.log(data)
+                },
+            });
+        });
+    });
 </script>
 <body class="container">
     <h1>i am testing something</h1>
@@ -39,10 +52,10 @@
                     <td>{{ tempdata.template_name }}</td>
                     <td>{{ tempdata.template_words }}</td>
                     <td>{{ tempdata.keywords }}</td>
-                    <td><input type="checkbox" value="True" id= {{ tempdata.id }} name= {{ tempdata.id }} class="temp_check" checked></td>
+                    <td><input type="checkbox" value={{ tempdata.id }} id= {{ tempdata.id }} name= {{ tempdata.id }} class="temp_check" checked></td>
                   </tr>
                   {% endfor %}
-                  <button type="button" class="btn btn-primary" onclick="getcheckval()">Primary</button>
+                  <button type="button" class="btn btn-primary">Primary</button>
 
           </div>
 
